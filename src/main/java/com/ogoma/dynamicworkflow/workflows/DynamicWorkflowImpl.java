@@ -30,25 +30,19 @@ public class DynamicWorkflowImpl
             WorkflowDefinition workflow,
             Map<String, Object> context
     ) {
-
         ConditionEvaluator evaluator =
                 new ConditionEvaluator();
-
         WorkflowContext workflowContext =
                 new WorkflowContext();
-
         context.forEach(workflowContext::put);
-
         for (ActivityDefinition definition :
                 workflow.activities()) {
-
             if (!evaluator.evaluate(
                     definition.getCondition(),
                     workflowContext
             )) {
                 continue;
             }
-
             activity.execute(
                     definition,
                     workflowContext.variables()
