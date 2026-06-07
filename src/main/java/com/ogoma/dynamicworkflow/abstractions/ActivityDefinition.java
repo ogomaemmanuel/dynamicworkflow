@@ -1,7 +1,9 @@
-package com.ogoma.dynamicworkflow.activities;
+package com.ogoma.dynamicworkflow.abstractions;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.ogoma.dynamicworkflow.activities.ApprovalTaskActivity;
+import com.ogoma.dynamicworkflow.activities.HttpCallActivity;
 import com.ogoma.dynamicworkflow.activities.SendEmailActivity;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,11 +30,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class ActivityDefinition {
-        private String id;
+    private String id;
 
-        private String name;
-        /**
-         * Optional SpEL expression
-         */
-        private String condition;
+    private String name;
+
+
+    /**
+     * Optional SpEL expression
+     */
+    private String condition;
+
+    public abstract String getType();
 }
