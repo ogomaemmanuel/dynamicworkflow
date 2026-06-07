@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @Service
 public class WorkflowStarterService {
-
     private final WorkflowClient workflowClient;
 
     public WorkflowStarterService(
