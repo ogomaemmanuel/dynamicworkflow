@@ -23,13 +23,10 @@ public class DynamicActivityImpl implements DynamicActivity {
             ActivityDefinition activity,
             Map<String, Object> contextMap
     ) {
-
         WorkflowContext context =
                 new WorkflowContext();
-
         contextMap.forEach(context::put);
-
-        ActivityExecutor executor =
+        ActivityExecutor<ActivityDefinition> executor =
                 registry.get(activity.getType());
 
         executor.execute(activity, context);
