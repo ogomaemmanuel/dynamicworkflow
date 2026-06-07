@@ -13,6 +13,6 @@ public class SendEmailActivity extends ActivityDefinition {
 
     @Override
     public String getType() {
-        return "";
+        return "SEND_EMAIL";
     }
 }

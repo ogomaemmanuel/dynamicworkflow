@@ -1,11 +1,13 @@
 package com.ogoma.dynamicworkflow.activities;
 
 import com.ogoma.dynamicworkflow.abstractions.ActivityExecutor;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SendEmailExecutor implements ActivityExecutor<SendEmailActivity> {
     @Override
     public String type() {
-        return "";
+        return "SEND_EMAIL";
     }
 
     @Override

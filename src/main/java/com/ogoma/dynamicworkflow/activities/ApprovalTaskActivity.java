@@ -13,6 +13,6 @@ public class ApprovalTaskActivity extends ActivityDefinition {
 
     @Override
     public String getType() {
-        return "";
+        return "APPROVAL_TASK";
     }
 }
