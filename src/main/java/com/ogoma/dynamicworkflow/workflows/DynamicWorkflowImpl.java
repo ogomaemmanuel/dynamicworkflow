@@ -12,9 +12,7 @@ import io.temporal.workflow.Workflow;
 import java.time.Duration;
 import java.util.Map;
 
-public class DynamicWorkflowImpl
-        implements DynamicWorkflow {
-
+public class DynamicWorkflowImpl implements DynamicWorkflow {
     private final DynamicActivity activity =
             Workflow.newActivityStub(
                     DynamicActivity.class,
