@@ -5,6 +5,7 @@ import com.ogoma.dynamicworkflow.abstractions.DynamicActivity;
 import com.ogoma.dynamicworkflow.abstractions.DynamicWorkflow;
 import com.ogoma.dynamicworkflow.abstractions.WorkflowDefinition;
 import com.ogoma.dynamicworkflow.activities.ConditionEvaluator;
+import com.ogoma.dynamicworkflow.activities.DurationResolver;
 import com.ogoma.dynamicworkflow.activities.TimerActivity;
 import com.ogoma.dynamicworkflow.activities.WorkflowContext;
 import io.temporal.activity.ActivityOptions;
@@ -50,7 +51,14 @@ public class DynamicWorkflowImpl implements DynamicWorkflow {
                 continue;
             }
             if (activity instanceof TimerActivity timer) {
-                Duration duration = timer.getDuration();
+                DurationResolver durationResolver =
+                        new DurationResolver();
+
+                Duration duration =
+                        durationResolver.resolve(
+                                timer,
+                                context
+                        );
                 Workflow.sleep(duration);
                 continue;
             }
@@ -67,7 +75,6 @@ public class DynamicWorkflowImpl implements DynamicWorkflow {
             String signalName,
             Object payload
     ) {
-
         receivedSignals.put(
                 signalName,
                 payload
