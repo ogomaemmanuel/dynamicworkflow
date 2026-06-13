@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Component
 public class ActivityRegistry {
 
-    private final Map<String, ActivityExecutor<? extends ActivityDefinition>> executors;
+    private final Map<Class<? extends ActivityDefinition>, ActivityExecutor<? extends ActivityDefinition>> executors;
 
     public ActivityRegistry(
             List<ActivityExecutor<?>> activities
@@ -21,14 +21,14 @@ public class ActivityRegistry {
         this.executors =
                 activities.stream()
                         .collect(Collectors.toMap(
-                                ActivityExecutor::type,
+                                ActivityExecutor::supports,
                                 Function.identity()
                         ));
     }
 
     @SuppressWarnings("unchecked")
     public <T extends ActivityDefinition>
-    ActivityExecutor<T> get(String type) {
+    ActivityExecutor<T> get(Class<? extends ActivityDefinition> type) {
         return (ActivityExecutor<T>)
                 executors.get(type);
     }

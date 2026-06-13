@@ -15,12 +15,6 @@ public class HttpCallActivity extends ActivityDefinition {
     private HttpMethod method;
     private Map<String, String> headers;
     private Object body;
-
-    @Override
-    public String getType() {
-        return "HTTP_CALL";
-    }
-
     public enum HttpMethod{
         POST,GET,PUT,PATCH,DELETE
     }

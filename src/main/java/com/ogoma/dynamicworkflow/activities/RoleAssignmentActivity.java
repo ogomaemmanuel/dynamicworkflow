@@ -6,10 +6,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SendEmailActivity extends ActivityDefinition {
-
-    private String template;
-    private String recipient;
-    private String body;
-    private String subject;
+public class RoleAssignmentActivity extends ActivityDefinition {
+    String roleID;
 }

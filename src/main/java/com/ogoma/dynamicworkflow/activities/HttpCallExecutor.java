@@ -2,6 +2,7 @@ package com.ogoma.dynamicworkflow.activities;
 
 import com.ogoma.dynamicworkflow.abstractions.ActivityExecutor;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.http.HttpHeaders;
@@ -11,11 +12,9 @@ import org.springframework.web.client.RestClient;
 
 import java.util.Optional;
 
-import static org.springframework.http.HttpMethod.*;
 
 @Component
-public class HttpCallExecutor
-        implements ActivityExecutor<HttpCallActivity> {
+public class HttpCallExecutor implements ActivityExecutor<HttpCallActivity> {
 
     private final RestClient restClient;
 
@@ -24,8 +23,8 @@ public class HttpCallExecutor
     }
 
     @Override
-    public String type() {
-        return "HTTP_CALL";
+    public Class<HttpCallActivity> supports() {
+        return HttpCallActivity.class;
     }
 
     @Override
@@ -48,43 +47,38 @@ public class HttpCallExecutor
 
         ResponseEntity<String> response =
                 switch (activity.getMethod()) {
-                    case GET ->
-                            restClient.get()
-                                    .uri(url)
-                                    .headers(h -> h.addAll(headers))
-                                    .retrieve()
-                                    .toEntity(String.class);
+                    case GET -> restClient.get()
+                            .uri(url)
+                            .headers(h -> h.addAll(headers))
+                            .retrieve()
+                            .toEntity(String.class);
 
-                    case POST ->
-                            restClient.post()
-                                    .uri(url)
-                                    .headers(h -> h.addAll(headers))
-                                    .body(body)
-                                    .retrieve()
-                                    .toEntity(String.class);
+                    case POST -> restClient.post()
+                            .uri(url)
+                            .headers(h -> h.addAll(headers))
+                            .body(body)
+                            .retrieve()
+                            .toEntity(String.class);
 
-                    case PUT ->
-                            restClient.put()
-                                    .uri(url)
-                                    .headers(h -> h.addAll(headers))
-                                    .body(body)
-                                    .retrieve()
-                                    .toEntity(String.class);
+                    case PUT -> restClient.put()
+                            .uri(url)
+                            .headers(h -> h.addAll(headers))
+                            .body(body)
+                            .retrieve()
+                            .toEntity(String.class);
 
-                    case PATCH ->
-                            restClient.patch()
-                                    .uri(url)
-                                    .headers(h -> h.addAll(headers))
-                                    .body(body)
-                                    .retrieve()
-                                    .toEntity(String.class);
+                    case PATCH -> restClient.patch()
+                            .uri(url)
+                            .headers(h -> h.addAll(headers))
+                            .body(body)
+                            .retrieve()
+                            .toEntity(String.class);
 
-                    case DELETE ->
-                            restClient.delete()
-                                    .uri(url)
-                                    .headers(h -> h.addAll(headers))
-                                    .retrieve()
-                                    .toEntity(String.class);
+                    case DELETE -> restClient.delete()
+                            .uri(url)
+                            .headers(h -> h.addAll(headers))
+                            .retrieve()
+                            .toEntity(String.class);
 
                 };
 
@@ -111,13 +105,12 @@ public class HttpCallExecutor
         StandardEvaluationContext evalContext =
                 new StandardEvaluationContext();
 
-        context.variables()
-                .forEach(evalContext::setVariable);
+        evalContext.setVariables(context.variables());
 
         ExpressionParser parser =
                 new SpelExpressionParser();
 
-        return parser.parseExpression(value)
+        return parser.parseExpression(value, new TemplateParserContext())
                 .getValue(evalContext, String.class);
     }
 }

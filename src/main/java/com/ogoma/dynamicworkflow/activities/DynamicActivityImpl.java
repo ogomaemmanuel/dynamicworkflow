@@ -9,15 +9,12 @@ import java.util.Map;
 
 @Component
 public class DynamicActivityImpl implements DynamicActivity {
-
     private final ActivityRegistry registry;
-
     public DynamicActivityImpl(
             ActivityRegistry registry
     ) {
         this.registry = registry;
     }
-
     @Override
     public void execute(
             ActivityDefinition activity,
@@ -27,8 +24,7 @@ public class DynamicActivityImpl implements DynamicActivity {
                 new WorkflowContext();
         contextMap.forEach(context::put);
         ActivityExecutor<ActivityDefinition> executor =
-                registry.get(activity.getType());
-
+                registry.get(activity.getClass());
         executor.execute(activity, context);
     }
 }

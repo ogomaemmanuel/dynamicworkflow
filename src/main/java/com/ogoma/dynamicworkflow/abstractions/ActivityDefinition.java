@@ -2,16 +2,17 @@ package com.ogoma.dynamicworkflow.abstractions;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.ogoma.dynamicworkflow.activities.ApprovalTaskActivity;
-import com.ogoma.dynamicworkflow.activities.HttpCallActivity;
-import com.ogoma.dynamicworkflow.activities.SendEmailActivity;
+import com.ogoma.dynamicworkflow.activities.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "type"
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type",
+        visible = true
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(
@@ -25,20 +26,36 @@ import lombok.Setter;
         @JsonSubTypes.Type(
                 value = ApprovalTaskActivity.class,
                 name = "APPROVAL_TASK"
+        ),
+        @JsonSubTypes.Type(
+                value = RoleAssignmentActivity.class,
+                name = "Role_Assignment"
         )
 })
 @Getter
 @Setter
 public abstract class ActivityDefinition {
-    private String id;
+    private UUID id;
 
     private String name;
 
+    private String type;
 
     /**
      * Optional SpEL expression
      */
     private String condition;
 
-    public abstract String getType();
+    private ActivityDefinition compensation;
+
+    private boolean compensatable = true;
+    private RetryConfig retry =
+            RetryConfig.defaults();
+
+    private TimeoutConfig timeout =
+            TimeoutConfig.defaults();
+
+    protected ActivityDefinition() {
+        this.id = UUID.randomUUID();
+    }
 }

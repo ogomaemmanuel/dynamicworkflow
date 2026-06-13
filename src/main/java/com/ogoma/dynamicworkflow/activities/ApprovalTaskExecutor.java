@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 public class ApprovalTaskExecutor implements ActivityExecutor<ApprovalTaskActivity> {
 
     @Override
-    public String type() {
-        return "APPROVAL_TASK";
+    public Class<ApprovalTaskActivity> supports() {
+        return ApprovalTaskActivity.class;
     }
 
     @Override

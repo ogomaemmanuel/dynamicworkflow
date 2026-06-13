@@ -15,32 +15,34 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class TemporalConfig {
 
+
     @Bean
-    public WorkflowClient workflowClient() {
+    public WorkflowClient workflowClient(AppProperties appProperties) {
         var service = WorkflowServiceStubs
                 .newServiceStubs(WorkflowServiceStubsOptions.newBuilder()
-                        .setTarget("localhost:7233").build());
+                        .setTarget(appProperties.getTemporalAddress()).build());
         var clientOptions = WorkflowClientOptions.newBuilder()
-                .setNamespace("default")
+                .setNamespace(appProperties.getTemporalNamespace())
                 .build();
         return WorkflowClient.newInstance(service, clientOptions);
     }
 
     @Bean
-    public WorkerFactory workerFactory() {
-        return WorkerFactory.newInstance(workflowClient());
+    public WorkerFactory workerFactory(WorkflowClient workflowClient) {
+        return WorkerFactory.newInstance(workflowClient);
     }
 
 
     @Bean
     public Worker workflowWorker(
             WorkerFactory workerFactory,
-            DynamicActivityImpl dynamicActivity
-    ) {
+            DynamicActivityImpl dynamicActivity,
+            AppProperties appProperties
+            ) {
 
         Worker worker =
                 workerFactory.newWorker(
-                        "DYNAMIC_WORKFLOW_QUEUE"
+                        appProperties.getTaskQueue()
                 );
 
         worker.registerWorkflowImplementationTypes(

@@ -11,8 +11,4 @@ public class ApprovalTaskActivity extends ActivityDefinition {
 
     private Integer dueDays;
 
-    @Override
-    public String getType() {
-        return "APPROVAL_TASK";
-    }
 }
