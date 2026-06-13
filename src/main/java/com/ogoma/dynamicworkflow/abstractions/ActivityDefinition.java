@@ -51,16 +51,15 @@ public abstract class ActivityDefinition {
 
     private String type;
 
+    String resultKey;
     /**
      * Optional SpEL expression
      */
     private String condition;
 
     private ActivityDefinition compensation;
-
     private boolean compensatable = true;
-    private RetryConfig retry =
-            RetryConfig.defaults();
+    private RetryConfig retry = RetryConfig.defaults();
 
     private TimeoutConfig timeout =
             TimeoutConfig.defaults();

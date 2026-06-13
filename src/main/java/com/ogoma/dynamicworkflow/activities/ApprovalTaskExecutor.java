@@ -1,9 +1,11 @@
 package com.ogoma.dynamicworkflow.activities;
 
 import com.ogoma.dynamicworkflow.abstractions.ActivityExecutor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class ApprovalTaskExecutor implements ActivityExecutor<ApprovalTaskActivity> {
 
     @Override
@@ -16,9 +18,6 @@ public class ApprovalTaskExecutor implements ActivityExecutor<ApprovalTaskActivi
             ApprovalTaskActivity activity,
             WorkflowContext context
     ) {
-
-        System.out.println(
-                "Creating approval task"
-        );
+        log.info(" Creating approval task");
     }
 }

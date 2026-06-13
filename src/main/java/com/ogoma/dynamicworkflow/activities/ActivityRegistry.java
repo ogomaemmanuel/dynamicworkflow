@@ -27,8 +27,7 @@ public class ActivityRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends ActivityDefinition>
-    ActivityExecutor<T> get(Class<? extends ActivityDefinition> type) {
+    public <T extends ActivityDefinition> ActivityExecutor<T> get(Class<? extends ActivityDefinition> type) {
         return (ActivityExecutor<T>)
                 executors.get(type);
     }
