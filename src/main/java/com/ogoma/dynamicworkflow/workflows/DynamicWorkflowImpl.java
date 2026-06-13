@@ -5,15 +5,20 @@ import com.ogoma.dynamicworkflow.abstractions.DynamicActivity;
 import com.ogoma.dynamicworkflow.abstractions.DynamicWorkflow;
 import com.ogoma.dynamicworkflow.abstractions.WorkflowDefinition;
 import com.ogoma.dynamicworkflow.activities.ConditionEvaluator;
+import com.ogoma.dynamicworkflow.activities.TimerActivity;
 import com.ogoma.dynamicworkflow.activities.WorkflowContext;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.Workflow;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Map;
 
 public class DynamicWorkflowImpl implements DynamicWorkflow {
-    private final DynamicActivity activity =
+
+    private final Map<String, Object> receivedSignals =
+            new HashMap<>();
+    private final DynamicActivity dynamicActivity =
             Workflow.newActivityStub(
                     DynamicActivity.class,
                     ActivityOptions.newBuilder()
@@ -26,25 +31,46 @@ public class DynamicWorkflowImpl implements DynamicWorkflow {
     @Override
     public void start(
             WorkflowDefinition workflow,
-            Map<String, Object> context
+            Map<String, Object> contextMap
     ) {
+
+        WorkflowContext context =
+                new WorkflowContext();
+
+        contextMap.forEach(context::put);
+
         ConditionEvaluator evaluator =
                 new ConditionEvaluator();
-        WorkflowContext workflowContext =
-                new WorkflowContext();
-        context.forEach(workflowContext::put);
-        for (ActivityDefinition definition :
+        for (ActivityDefinition activity :
                 workflow.activities()) {
             if (!evaluator.evaluate(
-                    definition.getCondition(),
-                    workflowContext
+                    activity.getCondition(),
+                    context
             )) {
                 continue;
             }
-            activity.execute(
-                    definition,
-                    workflowContext.variables()
+            if (activity instanceof TimerActivity timer) {
+                Duration duration = timer.getDuration();
+                Workflow.sleep(duration);
+                continue;
+            }
+
+            dynamicActivity.execute(
+                    activity,
+                    context.variables()
             );
         }
+    }
+
+    @Override
+    public void signal(
+            String signalName,
+            Object payload
+    ) {
+
+        receivedSignals.put(
+                signalName,
+                payload
+        );
     }
 }

@@ -1,5 +1,6 @@
 package com.ogoma.dynamicworkflow.abstractions;
 
+import io.temporal.workflow.SignalMethod;
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
 
@@ -12,5 +13,11 @@ public interface DynamicWorkflow {
     void start(
             WorkflowDefinition definition,
             Map<String, Object> context
+    );
+
+    @SignalMethod
+    void signal(
+            String signalName,
+            Object payload
     );
 }

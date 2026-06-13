@@ -29,8 +29,18 @@ import java.util.UUID;
         ),
         @JsonSubTypes.Type(
                 value = RoleAssignmentActivity.class,
-                name = "Role_Assignment"
-        )
+                name = "ROLE_ASSIGNMENT"
+        ),
+        @JsonSubTypes.Type(
+                value = DecisionActivity.class,
+                name = "DECISION"
+        ),
+
+        @JsonSubTypes.Type(
+                value = TimerActivity.class,
+                name = "TIMER"
+        ),
+
 })
 @Getter
 @Setter
